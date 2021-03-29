@@ -2,7 +2,7 @@
  * Reads manifest.json and determines the file to use
  */
 (function () {
-  const rootURI = document.currentScript.src
+  const rootURI = document.currentScript.src.replace('/loader.js')
   
   // Load the manifest
   fetch(rootURI + '/manifest.json')
