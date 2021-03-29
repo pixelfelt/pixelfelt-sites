@@ -15,7 +15,7 @@
     },
     {
       "matches": ["https://teropa.info/musicmouse*"],
-      "js": ["/sites/teropa.info/musicmouse/musicmouse.js"]
+      "js": ["/sites/teropa.info/musicmouse/index.js"]
     }
   ]
 }
