@@ -2,15 +2,19 @@
   "manifest_version": 1,
   "sites": [
     {
-      "matches": "https://sketchfab.com/*",
+      "matches": "https://gacembed.withgoogle.com/blob-opera*",
+      "js": "sites/withgoogle.com/blob-opera.js"
+    },
+    {
+      "matches": "https://sketchfab.com*",
       "js": "sites/sketchfab.com/index.js"
     },
     {
-      "matches": "https://sm64.gitlab.io/*",
+      "matches": "https://sm64.gitlab.io*",
       "js": "sites/sm64.gitlab.io/index.js"
     },
     {
-      "matches": ["https://teropa.info/musicmouse/*"],
+      "matches": ["https://teropa.info/musicmouse*"],
       "js": ["/sites/teropa.info/musicmouse/musicmouse.js"]
     }
   ]
