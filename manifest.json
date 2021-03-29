@@ -3,7 +3,11 @@
   "sites": [
     {
       "matches": "https://sketchfab.com/*",
-      "js": "sketchfab.com/index.js"
+      "js": "sites/sketchfab.com/index.js"
+    },
+    {
+      "matches": ["https://teropa.info/musicmouse/*"],
+      "js": ["/sites/teropa.info/musicmouse/musicmouse.js"]
     }
   ]
 }

@@ -1,8 +1,14 @@
 /**
+ * @see https://pixelfelt.com/site/sketchfab-com
+ * @see https://sketchfab.com/3d-models/popular
+ */
+
+/**
  * Click and drag sketchfabs
  */
 (function () {
   // Setup Handsfree.js
+  handsfree.enablePlugins('browser')
   handsfree.update({
     hands: true,
     weboji: false,
