@@ -2,7 +2,7 @@
   "manifest_version": 1,
   "sites": [
     {
-      "matches": "https://gacembed.withgoogle.com/blob-opera*",
+      "matches": ["https://gacembed.withgoogle.com/blob-opera*", "https://artsandculture.google.com/experiment/AAHWrq360NcGbw*"],
       "js": "sites/withgoogle.com/blob-opera.js"
     },
     {
