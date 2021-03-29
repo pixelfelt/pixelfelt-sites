@@ -1,0 +1,19 @@
+{
+  "name": "pixelfelt-sites",
+  "version": "0.0.2",
+  "description": "A collection of Handsfree.js plugins for specific sites and pages",
+  "main": "loader.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pixelfelt/pixelfelt-sites.git"
+  },
+  "author": "Oz Ramos <oz@pixelfelt.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/pixelfelt/pixelfelt-sites/issues"
+  },
+  "homepage": "https://github.com/pixelfelt/pixelfelt-sites#readme"
+}
