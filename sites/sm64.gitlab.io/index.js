@@ -33,7 +33,7 @@
         if (hand) return
         
         // Move the pointer
-        const $el = document.elementFromPoint(pointer.x, pointer.y)
+        const $el = document.elementFromPoint(pointer.x || 0, pointer.y || 0)
         if ($el) {
           // Most of these are not required but need to move onto another task for now so YOLO!
           $el.dispatchEvent(new PointerEvent('pointermove', {
