@@ -6,6 +6,10 @@
       "js": "sites/sketchfab.com/index.js"
     },
     {
+      "matches": "https://sm64.gitlab.io/*",
+      "js": "sites/sm64.gitlab.io/index.js"
+    },
+    {
       "matches": ["https://teropa.info/musicmouse/*"],
       "js": ["/sites/teropa.info/musicmouse/musicmouse.js"]
     }
