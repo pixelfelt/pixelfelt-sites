@@ -56,7 +56,6 @@
       // Click on things
       if (hands.pinchState[1][0] === 'start' && hands.pointer[1].x) {
         const $el = document.elementFromPoint(hands.pointer[1].x, hands.pointer[1].y)
-        console.log($el, 'click')
         if ($el && $el.classList.contains('c-model-360-preview')) {
           $el.dispatchEvent(
             new MouseEvent('click', {
