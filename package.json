@@ -4,6 +4,7 @@
   "description": "A collection of Handsfree.js plugins for specific sites and pages",
   "main": "loader.js",
   "scripts": {
+    "start": "cd dashboard && npm start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
