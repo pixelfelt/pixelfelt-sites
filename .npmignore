@@ -1,1 +1,6 @@
-dashboard
+# Dashboard
+dashboard/node_modules
+dashboard/public
+dashboard/src
+dashboard/package-lock.json
+dashboard/package.json

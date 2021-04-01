@@ -8,19 +8,34 @@
   fetch(rootURI + '/manifest.json')
     .then(response => response.json())
     .then(manifest => {
+      const $ = {
+        handsfree: {
+          js: document.createElement('script'),
+          css: document.createElement('link')
+        },
+        dashboard: {
+          iframe: document.createElement('iframe'),
+          css: document.createElement('link')
+        }
+      }
+      
       // Inject Handsfree
-      const $script = document.createElement('script')
-      const $link = document.createElement('link')
+      $.handsfree.js.src = 'https://unpkg.com/handsfree@latest/build/lib/handsfree.js'
+      $.handsfree.css.setAttribute('rel', 'stylesheet')
+      $.handsfree.css.setAttribute('type', 'text/css')
+      $.handsfree.css.setAttribute('href', 'https://unpkg.com/handsfree@latest/build/lib/assets/handsfree.css')
 
-      $script.src = 'https://unpkg.com/handsfree@latest/build/lib/handsfree.js'
-      $link.setAttribute('rel', 'stylesheet')
-      $link.setAttribute('type', 'text/css')
-      $link.setAttribute('href', 'https://unpkg.com/handsfree@latest/build/lib/assets/handsfree.css')
+      // Inject dashboard
+      $.dashboard.iframe.src = rootURI + '/dashboard/dist/index.html'
+      $.dashboard.iframe.id = 'pixelfelt-dashboard'
+      $.dashboard.css.setAttribute('rel', 'stylesheet')
+      $.dashboard.css.setAttribute('type', 'text/css')
+      $.dashboard.css.setAttribute('href', rootURI + '/iframe.css')
 
       /**
        * Configure Handsfree.js and load scripts
        */
-      $script.onload = function () {
+      $.handsfree.js.onload = function () {
         handsfree = new Handsfree({
           showDebug: true,
           hands: true
@@ -56,11 +71,11 @@
   
               // Inject CSS
               site.css && site.css.forEach(css => {
-                const $link = document.createElement('link')
-                $link.setAttribute('rel', 'stylesheet')
-                $link.setAttribute('type', 'text/css')
-                $link.setAttribute('href', rootURI + '/' + css)
-                document.head.appendChild($link)
+                const $css = document.createElement('link')
+                $css.setAttribute('rel', 'stylesheet')
+                $css.setAttribute('type', 'text/css')
+                $css.setAttribute('href', rootURI + '/' + css)
+                document.head.appendChild($css)
               })
             }
           })
@@ -69,7 +84,10 @@
         handsfree.start()
       }
 
-      document.body.appendChild($script)
-      document.head.appendChild($link)
+      // Inject things
+      document.head.appendChild($.handsfree.css)
+      document.head.appendChild($.dashboard.css)
+      document.body.appendChild($.handsfree.js)
+      document.body.appendChild($.dashboard.iframe)
     })
 })()
