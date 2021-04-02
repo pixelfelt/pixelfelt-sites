@@ -19,11 +19,13 @@
     "url": "https://github.com/pixelfelt/pixelfelt-sites/issues"
   },
   "homepage": "https://github.com/pixelfelt/pixelfelt-sites#readme",
-
   "dependencies": {
     "core-js": "^3.6.5",
+    "monaco-editor-webpack-plugin": "^1.8.2",
+    "pug": "^3.0.2",
+    "pug-plain-loader": "^1.1.0",
     "vue": "^3.0.0",
-    "vue-monaco": "^1.2.2"
+    "vue-monaco": "^1.2.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
