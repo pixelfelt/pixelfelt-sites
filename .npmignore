@@ -1,0 +1,6 @@
+# Dashboard
+node_modules
+public
+src
+babel.config.js
+vue.config.js
