@@ -14,7 +14,11 @@ export default {
 
   data () {
     return {
-      code: '',
+      code: `handsfree.use('custom', (data) => {
+  if (!data) return
+
+
+})`,
       
       settings: {
         theme: 'shadesofpurple',

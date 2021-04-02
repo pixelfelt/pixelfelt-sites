@@ -26,7 +26,7 @@
       $.handsfree.css.setAttribute('href', 'https://unpkg.com/handsfree@latest/build/lib/assets/handsfree.css')
 
       // Inject dashboard
-      $.dashboard.iframe.src = rootURI + '/dashboard/dist/index.html'
+      $.dashboard.iframe.src = rootURI + '/dist/index.html'
       $.dashboard.iframe.id = 'pixelfelt-dashboard'
       $.dashboard.css.setAttribute('rel', 'stylesheet')
       $.dashboard.css.setAttribute('type', 'text/css')
