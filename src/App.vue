@@ -80,10 +80,8 @@ export default {
       monaco.editor.setTheme('shadesofpurple')
 
       // Autoheight
-      if (this.$props.extraOptions.autoheight) {
-        this.updateHeight()
-        this.$refs.editor.editor.onDidContentSizeChange(this.updateHeight)
-      }
+      this.updateHeight()
+      this.$refs.editor.editor.onDidContentSizeChange(this.updateHeight)
     },
 
     /**
