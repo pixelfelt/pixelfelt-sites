@@ -1,5 +1,5 @@
 <template lang="pug">
-MonacoEditor(ref='editor' v-model='code' language='javascript' :options='settings' @editorDidMount='editorDidMount' theme='shadesofpurple')
+MonacoEditor#editor(ref='editor' v-model='code' language='javascript' :options='settings' @editorDidMount='editorDidMount' theme='shadesofpurple')
 </template>
 
 <script>
@@ -78,32 +78,11 @@ export default {
         }
       })
       monaco.editor.setTheme('shadesofpurple')
-
-      // Autoheight
-      this.updateHeight()
-      this.$refs.editor.editor.onDidContentSizeChange(this.updateHeight)
-    },
-
-    /**
-     * Autoresize
-     */
-    updateHeight () {
-      const contentHeight = Math.min(1000, this.$refs.editor.editor.getContentHeight()) + 20
-
-      this.$refs.editor.$el.style.height = `${contentHeight}px`
-      this.$refs.editor.editor.layout({ height: contentHeight })
     }
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+@import './assets/css/app.css';
 </style>
