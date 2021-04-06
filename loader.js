@@ -26,7 +26,7 @@
       $.handsfree.css.setAttribute('href', 'https://unpkg.com/handsfree@latest/build/lib/assets/handsfree.css')
 
       // Inject dashboard
-      $.dashboard.iframe.src = rootURI + '/dist/index.html'
+      $.dashboard.iframe.src = 'https://unpkg.com/pixelfelt-blockly@latest/dist/index.html'
       $.dashboard.iframe.id = 'pixelfelt-dashboard'
       $.dashboard.css.setAttribute('rel', 'stylesheet')
       $.dashboard.css.setAttribute('type', 'text/css')
@@ -84,10 +84,17 @@
         handsfree.start()
       }
 
-      // Inject things
+      // Inject scripts
       document.head.appendChild($.handsfree.css)
       document.head.appendChild($.dashboard.css)
       document.body.appendChild($.handsfree.js)
       document.body.appendChild($.dashboard.iframe)
+
+      // Listen for new code and inject it
+      window.addEventListener('message', (event) => {
+        if (event.data.action === 'pixelfelt.editor.runCode') {
+          eval(event.data.code)
+        }
+      })
     })
 })()
