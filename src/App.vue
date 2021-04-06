@@ -1,5 +1,10 @@
 <template lang="pug">
-MonacoEditor#editor(ref='editor' v-model='code' language='javascript' :options='settings' @editorDidMount='editorDidMount' theme='shadesofpurple')
+div.flex.column.full-height
+  nav
+    div
+      img(src='/pixelfelt-title.png' height=40)
+  div
+    MonacoEditor#editor(ref='editor' v-model='code' language='javascript' :options='settings' @editorDidMount='editorDidMount' theme='shadesofpurple')
 </template>
 
 <script>
@@ -15,9 +20,14 @@ export default {
   data () {
     return {
       code: `handsfree.use('custom', (data) => {
-  if (!data) return
+  try {
+    if (!data) return
 
-
+    // 💻 Your code here 👇
+    
+  } catch (err) {
+    console.log(err)
+  }
 })`,
       
       settings: {

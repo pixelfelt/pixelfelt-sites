@@ -1,18 +1,18 @@
 @import '../../../node_modules/spectre.css/dist/spectre.css';
 
+/* Helpers */
+.full-height {height: 100%;}
+.flex {display: flex}
+.flex.column {flex-direction: column;}
+.flex > * {flex: 1 auto}
+
+/* Core */
 html, body {
   height: 100%;
+  background: #1e1e3f;
 }
 
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-
+/* Editor */
 body .monaco-editor .line-numbers {
   color: #A599E9
 }
@@ -25,6 +25,7 @@ body #editor {
   width: 100% !important;
   height: 100%;
 }
+
 .overflowingContentWidgets {
   display: none;
 }
