@@ -84,10 +84,17 @@
         handsfree.start()
       }
 
-      // Inject things
+      // Inject scripts
       document.head.appendChild($.handsfree.css)
       document.head.appendChild($.dashboard.css)
       document.body.appendChild($.handsfree.js)
       document.body.appendChild($.dashboard.iframe)
+
+      // Listen for new code and inject it
+      window.addEventListener('message', (event) => {
+        if (event.action === 'pixelfelt.editor.runCode') {
+          eval(event.code)
+        }
+      })
     })
 })()
