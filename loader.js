@@ -92,8 +92,8 @@
 
       // Listen for new code and inject it
       window.addEventListener('message', (event) => {
-        if (event.action === 'pixelfelt.editor.runCode') {
-          eval(event.code)
+        if (event.data.action === 'pixelfelt.editor.runCode') {
+          eval(event.data.code)
         }
       })
     })
