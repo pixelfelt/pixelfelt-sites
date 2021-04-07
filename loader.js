@@ -2,9 +2,17 @@
  * Reads manifest.json and determines the file to use
  */
 (function () {
+  // All other assets are relative to this URL
   const rootURI = document.currentScript.src.split('/loader.js')[0]
+
+  /**
+   * Displays an error if a dependency can't load
+   */
+  const handleError = function () {alert('😞 Pixelfelt Load Error\n\nPlease refresh the page and try again. If you get this message again then Pixelfelt might not work on this page.')}
   
-  // Load the manifest
+  /**
+   * Load the manifest and dependencies
+   */
   fetch(rootURI + '/manifest.json')
     .then(response => response.json())
     .then(manifest => {
@@ -24,6 +32,7 @@
       $.handsfree.css.setAttribute('rel', 'stylesheet')
       $.handsfree.css.setAttribute('type', 'text/css')
       $.handsfree.css.setAttribute('href', 'https://unpkg.com/handsfree@latest/build/lib/assets/handsfree.css')
+      $.handsfree.js.onerror = handleError
 
       // Inject dashboard
       $.dashboard.iframe.src = 'https://unpkg.com/pixelfelt-blockly@latest/dist/index.html'
@@ -90,11 +99,14 @@
       document.body.appendChild($.handsfree.js)
       document.body.appendChild($.dashboard.iframe)
 
-      // Listen for new code and inject it
+      /**
+       * Listen for new code and inject it
+       */
       window.addEventListener('message', (event) => {
         if (event.data.action === 'pixelfelt.editor.runCode') {
           eval(event.data.code)
         }
       })
     })
+    .catch(handleError)
 })()
