@@ -4,11 +4,14 @@
 (function () {
   // All other assets are relative to this URL
   const rootURI = document.currentScript.src.split('/loader.js')[0]
+  let $pipCanvas, pipContext, $videoPip
 
   /**
    * Displays an error if a dependency can't load
    */
-  const handleError = function () {alert('😞 Pixelfelt Load Error\n\nPlease refresh the page and try again. If you get this message again then Pixelfelt might not work on this page.')}
+  const handleError = function () {
+    alert('😞 Pixelfelt Load Error\n\nPlease refresh the page and try again. If you get this message again then Pixelfelt might not work on this page.')
+  }
   
   /**
    * Load the manifest and dependencies
@@ -94,7 +97,49 @@
           })
         })
 
-        handsfree.start()
+        /**
+         * Picture in Picture
+         */
+        // This will receive the layers and stream
+        $pipCanvas = document.createElement('CANVAS')
+        document.body.appendChild($pipCanvas)
+        pipContext = $pipCanvas.getContext('2d')
+        pipContext.globalAlpha = .2
+        $pipCanvas.style.display = 'none'
+
+        // This will be the video we pip
+        $videoPip = document.createElement('VIDEO')
+        document.body.appendChild($videoPip)
+        $videoPip.style.display = 'none'
+
+        handsfree.use('canvasUpdater', {
+          onFrame () {
+            // Merge all active models into a single layer
+            pipContext.drawImage(handsfree.debug.$video, 0, 0, $pipCanvas.width, $pipCanvas.height)
+            Object.keys(handsfree.model).forEach(name => {
+              if (handsfree.model[name].enabled) {
+                pipContext.drawImage(handsfree.debug.$canvas[name], 0, 0, $pipCanvas.width, $pipCanvas.height)
+              }
+            })
+          }
+        })
+
+        // Setup the picture in picture
+        handsfree.on('data', () => {
+          $pipCanvas.width = $videoPip.width = handsfree.debug.$video.width
+          $pipCanvas.height = $videoPip.height = handsfree.debug.$video.height
+          $videoPip.srcObject = $pipCanvas.captureStream()
+          $videoPip.onloadedmetadata = () => {
+            $videoPip.play()
+          }
+          $videoPip.onplay = () => {
+            $videoPip.requestPictureInPicture()
+          }
+        }, {once: true})
+
+        handsfree.start(() => {
+          handsfree.debug.$wrap.style.display = 'none'
+        })
       }
 
       // Inject scripts
@@ -134,11 +179,19 @@
       })
 
       /**
-       * Listen for new code and inject it
+       * Listen for new messages
        */
       window.addEventListener('message', (event) => {
-        if (event.data.action === 'pixelfelt.editor.runCode') {
-          eval(event.data.code)
+        switch (event.data.action) {
+          // Run code
+          case 'pixelfelt.editor.runCode':
+            eval(event.data.code)
+          break
+
+          // Picture in Picture
+          case 'pixelfelt.pip':
+            $videoPip.requestPictureInPicture()
+          break
         }
       })
     })
