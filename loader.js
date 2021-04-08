@@ -24,23 +24,27 @@
         dashboard: {
           iframe: document.createElement('iframe'),
           css: document.createElement('link')
-        }
+        },
+        handle: document.createElement('div')
       }
       
-      // Inject Handsfree
+      // Setup handsfree dependencies
       $.handsfree.js.src = 'https://unpkg.com/handsfree@latest/build/lib/handsfree.js'
       $.handsfree.css.setAttribute('rel', 'stylesheet')
       $.handsfree.css.setAttribute('type', 'text/css')
       $.handsfree.css.setAttribute('href', 'https://unpkg.com/handsfree@latest/build/lib/assets/handsfree.css')
       $.handsfree.js.onerror = handleError
 
-      // Inject dashboard
+      // Setup dashboard dependencies
       $.dashboard.iframe.src = 'https://unpkg.com/pixelfelt-blockly@latest/dist/index.html'
       $.dashboard.iframe.id = 'pixelfelt-dashboard'
       $.dashboard.css.setAttribute('rel', 'stylesheet')
       $.dashboard.css.setAttribute('type', 'text/css')
       $.dashboard.css.setAttribute('href', rootURI + '/iframe.css')
 
+      // Setup handle
+      $.handle.id = 'pixelfelt-dashboard-handle'
+      
       /**
        * Configure Handsfree.js and load scripts
        */
@@ -98,6 +102,36 @@
       document.head.appendChild($.dashboard.css)
       document.body.appendChild($.handsfree.js)
       document.body.appendChild($.dashboard.iframe)
+      document.body.appendChild($.handle)
+
+      /**
+       * Setup the handle and resizing
+       */
+      setTimeout(() => {
+        // Start drag
+        let isDragging = false
+        $.handle.addEventListener('mousedown', () => {
+          isDragging = true
+          $.dashboard.iframe.classList.add('pixelfelt-no-pointer-events')
+        })
+
+        // Stop drag
+        const stopDragging = () => {
+          isDragging = false
+          $.dashboard.iframe.classList.remove('pixelfelt-no-pointer-events')
+        }
+        document.body.addEventListener('mouseup', stopDragging)
+        $.dashboard.iframe.addEventListener('mouseup', stopDragging)
+
+        // Drag
+        const drag = (event) => {
+          if (isDragging) {
+            $.dashboard.iframe.setAttribute('style', `height: ${window.innerHeight - event.y}px !important`)
+            $.handle.setAttribute('style', `bottom: ${window.innerHeight - event.y - 5}px !important`)
+          }
+        }
+        document.body.addEventListener('mousemove', drag)
+      })
 
       /**
        * Listen for new code and inject it
