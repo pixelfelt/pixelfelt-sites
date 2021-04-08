@@ -102,10 +102,13 @@
         document.body.appendChild($pipCanvas)
         const pipContext = $pipCanvas.getContext('2d')
         pipContext.globalAlpha = .2
+        $pipCanvas.style.display = 'none'
 
         // This will be the video we pip
         const $videoPip = document.createElement('VIDEO')
         document.body.appendChild($videoPip)
+        $videoPip.style.display = 'none'
+
         handsfree.use('canvasUpdater', {
           onFrame () {
             // Merge all active models into a single layer
@@ -131,7 +134,9 @@
           }
         }, {once: true})
 
-        handsfree.start()
+        handsfree.start(() => {
+          handsfree.debug.$wrap.style.display = 'none'
+        })
       }
 
       // Inject scripts
