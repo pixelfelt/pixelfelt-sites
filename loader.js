@@ -4,11 +4,14 @@
 (function () {
   // All other assets are relative to this URL
   const rootURI = document.currentScript.src.split('/loader.js')[0]
+  let $pipCanvas, pipContext, $videoPip
 
   /**
    * Displays an error if a dependency can't load
    */
-  const handleError = function () {alert('😞 Pixelfelt Load Error\n\nPlease refresh the page and try again. If you get this message again then Pixelfelt might not work on this page.')}
+  const handleError = function () {
+    alert('😞 Pixelfelt Load Error\n\nPlease refresh the page and try again. If you get this message again then Pixelfelt might not work on this page.')
+  }
   
   /**
    * Load the manifest and dependencies
@@ -98,14 +101,14 @@
          * Picture in Picture
          */
         // This will receive the layers and stream
-        const $pipCanvas = document.createElement('CANVAS')
+        $pipCanvas = document.createElement('CANVAS')
         document.body.appendChild($pipCanvas)
-        const pipContext = $pipCanvas.getContext('2d')
+        pipContext = $pipCanvas.getContext('2d')
         pipContext.globalAlpha = .2
         $pipCanvas.style.display = 'none'
 
         // This will be the video we pip
-        const $videoPip = document.createElement('VIDEO')
+        $videoPip = document.createElement('VIDEO')
         document.body.appendChild($videoPip)
         $videoPip.style.display = 'none'
 
@@ -176,11 +179,19 @@
       })
 
       /**
-       * Listen for new code and inject it
+       * Listen for new messages
        */
       window.addEventListener('message', (event) => {
-        if (event.data.action === 'pixelfelt.editor.runCode') {
-          eval(event.data.code)
+        switch (event.data.action) {
+          // Run code
+          case 'pixelfelt.editor.runCode':
+            eval(event.data.code)
+          break
+
+          // Picture in Picture
+          case 'pixelfelt.pip':
+            $videoPip.requestPictureInPicture()
+          break
         }
       })
     })
