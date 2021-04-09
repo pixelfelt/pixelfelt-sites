@@ -189,7 +189,7 @@
           break
 
           // Picture in Picture
-          case 'pixelfelt.pip':
+          case 'pixelfelt.showDebugger':
             $videoPip.requestPictureInPicture()
           break
         }
