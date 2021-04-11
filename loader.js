@@ -28,7 +28,11 @@
           iframe: document.createElement('iframe'),
           css: document.createElement('link')
         },
-        handle: document.createElement('div')
+        handle: document.createElement('div'),
+        loader: {
+          wrapper: document.createElement('div'),
+          mask: document.createElement('div')
+        }
       }
       
       // Setup handsfree dependencies
@@ -41,12 +45,14 @@
       // Setup dashboard dependencies
       $.dashboard.iframe.src = 'https://unpkg.com/pixelfelt-blockly@latest/dist/index.html'
       $.dashboard.iframe.id = 'pixelfelt-dashboard'
+      $.dashboard.iframe.classList.add('handsfree-show-when-started')
       $.dashboard.css.setAttribute('rel', 'stylesheet')
       $.dashboard.css.setAttribute('type', 'text/css')
-      $.dashboard.css.setAttribute('href', rootURI + '/iframe.css')
+      $.dashboard.css.setAttribute('href', rootURI + '/assets/iframe.css')
 
       // Setup handle
       $.handle.id = 'pixelfelt-dashboard-handle'
+      $.handle.classList.add('handsfree-show-when-started')
       
       /**
        * Configure Handsfree.js and load scripts
@@ -147,6 +153,8 @@
       document.head.appendChild($.dashboard.css)
       document.body.appendChild($.handsfree.js)
       document.body.appendChild($.dashboard.iframe)
+      document.body.appendChild($.loader.mask)
+      document.body.appendChild($.loader.wrapper)
       document.body.appendChild($.handle)
 
       /**
@@ -177,6 +185,37 @@
         }
         document.body.addEventListener('mousemove', drag)
       })
+
+      /**
+       * Loader
+       */
+      $.loader.mask.classList.add('handsfree-show-when-loading', 'handsfree-hide-when-started')
+      $.loader.wrapper.classList.add('handsfree-show-when-loading', 'handsfree-hide-when-started')
+      
+      $.loader.wrapper.style.position = 'fixed'
+      $.loader.wrapper.style.width = '450px'
+      $.loader.wrapper.style.left = '50%'
+      $.loader.wrapper.style.marginLeft = '-225px'
+      $.loader.wrapper.style.bottom = '50%'
+      $.loader.wrapper.style.zIndex = '999999999999'
+      $.loader.wrapper.style.boxShadow = '3px 3px 6px 3px rgba(0,0,0,0.35)'
+      $.loader.wrapper.style.background = '#1e1e3f'
+      $.loader.wrapper.style.color = '#fff'
+      $.loader.wrapper.style.borderRadius = '3px'
+      $.loader.wrapper.style.padding = '20px'
+
+      $.loader.mask.style.position = 'fixed'
+      $.loader.mask.style.zIndex = '999999999998'
+      $.loader.mask.style.left = '0'
+      $.loader.mask.style.bottom = '0%'
+      $.loader.mask.style.width = '100%'
+      $.loader.mask.style.height = '100%'
+      $.loader.mask.style.background = 'rgba(0,0,0,0.35)'
+
+      $.loader.wrapper.innerHTML = `<div style="text-align: center !important">
+        <p><img src="${rootURI}/assets/logo-title.png" width=300 height="auto"></p>
+        <p style="font-size: 36px !important; color: #fff !important; text-shadow: none !important">Loading...</p>
+      </div>`
 
       /**
        * Listen for new messages
