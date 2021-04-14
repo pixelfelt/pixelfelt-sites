@@ -231,6 +231,18 @@
           case 'pixelfelt.showDebugger':
             $videoPip.requestPictureInPicture()
           break
+
+          // Maximize
+          case 'pixelfelt.maximize':
+            $.dashboard.iframe.setAttribute('style', `height: 100% !important`)
+            $.handle.setAttribute('style', `bottom: calc(100% - 8px) !important`)
+          break
+            
+          // Minimize
+          case 'pixelfelt.minimize':
+            $.dashboard.iframe.setAttribute('style', `height: 82px !important`)
+            $.handle.setAttribute('style', `bottom: 82px !important`)
+          break
         }
       })
     })
