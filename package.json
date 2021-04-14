@@ -1,6 +1,6 @@
 {
   "name": "pixelfelt-sites",
-  "version": "2021.4.14-5",
+  "version": "2021.4.14-14",
   "description": "A collection of Handsfree.js plugins for specific sites and pages",
   "main": "loader.js",
   "repository": {

@@ -4,13 +4,29 @@
 (function () {
   // All other assets are relative to this URL
   const rootURI = document.currentScript.src.split('/loader.js')[0]
-  let $pipCanvas, pipContext, $videoPip
+  let $, $pipCanvas, pipContext, $videoPip
+  let manifestCode = ''
+  let manifestScriptsLoading = 0
 
   /**
    * Displays an error if a dependency can't load
    */
   const handleError = function () {
     alert('😞 Pixelfelt Load Error\n\nPlease refresh the page and try again. If you get this message again then Pixelfelt might not work on this page.')
+  }
+
+  /**
+   * Load the code into the main page and dashboard
+   */
+  const maybeLoadCode = function () {
+    if (!manifestScriptsLoading) {
+      eval(manifestCode)
+      $.dashboard.iframe.contentWindow.postMessage({
+        action: 'editor.loadCode',
+        code: manifestCode
+      }, '*')
+      handsfree.start()
+    }
   }
   
   /**
@@ -19,7 +35,7 @@
   fetch(rootURI + '/manifest.json')
     .then(response => response.json())
     .then(manifest => {
-      const $ = {
+      $ = {
         handsfree: {
           js: document.createElement('script'),
           css: document.createElement('link')
@@ -86,9 +102,18 @@
             if (regexp.test(window.location.href)) {
               // Inject JS
               site.js && site.js.forEach(script => {
-                const $script = document.createElement('script')
-                $script.src = rootURI + '/' + script
-                document.body.appendChild($script)
+                ++manifestScriptsLoading
+
+                fetch(rootURI + '/' + script)
+                  .then(response => response.text())
+                  .then(code => {
+                    manifestCode += code + '\n\n'
+                  })
+                  .catch(handleError)
+                  .finally(() => {
+                    --manifestScriptsLoading
+                    maybeLoadCode()
+                  })
               })
   
               // Inject CSS
@@ -143,9 +168,9 @@
           }
         }, {once: true})
 
-        handsfree.start(() => {
+        setTimeout(() => {
           handsfree.debug.$wrap.style.display = 'none'
-        })
+        }, 0)
       }
 
       // Inject scripts
@@ -222,6 +247,11 @@
        */
       window.addEventListener('message', (event) => {
         switch (event.data.action) {
+          // Load code
+          case 'pixelfelt.ready':
+            maybeLoadCode()
+          break
+          
           // Run code
           case 'pixelfelt.editor.runCode':
             eval(event.data.code)
