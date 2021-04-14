@@ -13,7 +13,7 @@ body #pixelfelt-dashboard-handle {
 
 body div#pixelfelt-dashboard-handle {
   height: 8px !important;
-  bottom: calc(30%) !important;
+  bottom: 82px !important;
   background: #ff628c !important;
   cursor: ns-resize !important;
   box-shadow: none !important;
