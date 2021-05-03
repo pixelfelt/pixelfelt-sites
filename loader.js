@@ -17,14 +17,18 @@
 
   /**
    * Load the code into the main page and dashboard
+   * @param forceStart {Boolean} Force start
    */
-  const maybeLoadCode = function () {
-    if (!manifestScriptsLoading) {
-      eval(manifestCode)
-      $.dashboard.iframe.contentWindow.postMessage({
-        action: 'editor.loadCode',
-        code: manifestCode
-      }, '*')
+  const maybeLoadCode = function (forceStart) {
+    if (!manifestScriptsLoading || forceStart) {
+      if (manifestCode) {
+        eval(manifestCode)
+        $.dashboard.iframe.contentWindow.postMessage({
+          action: 'editor.loadCode',
+          code: manifestCode
+        }, '*')
+      }
+      
       handsfree.start()
     }
   }
@@ -249,7 +253,7 @@
         switch (event.data.action) {
           // Load code
           case 'pixelfelt.ready':
-            maybeLoadCode()
+            maybeLoadCode(true)
           break
           
           // Run code

@@ -16,6 +16,10 @@
     {
       "matches": ["https://teropa.info/musicmouse*"],
       "js": ["/sites/teropa.info/musicmouse/index.js"]
+    },
+    {
+      "matches": ["https://docs.google.com/presentation/d/*"],
+      "js": ["/sites/slides.google.com/index.js"]
     }
   ]
 }
