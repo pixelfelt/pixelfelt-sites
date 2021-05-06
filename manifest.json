@@ -18,11 +18,11 @@
       "js": ["/sites/teropa.info/musicmouse/index.js"]
     },
     {
-      "matches": ["https://docs.google.com/presentation/d/*"],
+      "matches": ["https://docs.google.com/presentation/d*"],
       "js": ["/sites/slides.google.com/index.js"]
     },
     {
-      "matches": ["https://youtube.com/*"],
+      "matches": ["https://youtube.com*"],
       "js": ["/sites/youtube.com/index.js"]
     }
   ]
