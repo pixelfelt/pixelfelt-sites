@@ -22,7 +22,7 @@
       "js": ["/sites/slides.google.com/index.js"]
     },
     {
-      "matches": ["https://youtube.com*"],
+      "matches": ["https://www.youtube.com*"],
       "js": ["/sites/youtube.com/index.js"]
     }
   ]
