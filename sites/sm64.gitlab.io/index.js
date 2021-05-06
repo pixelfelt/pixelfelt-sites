@@ -2,7 +2,7 @@
  * @see https://pixelfelt.com/site/sm64-gitlab-io
  * @see https://sm64.gitlab.io/
  */
-(function () {
+ (function () {
   // Setup Handsfree.js
   handsfree.enablePlugins('browser')
   handsfree.update({
@@ -109,3 +109,4 @@
     }
   })
 })()
+
