@@ -27,6 +27,8 @@
           code: manifestCode
         }, '*')
       }
+
+      handsfree.start()
     }
   }
   
@@ -171,7 +173,6 @@
 
         setTimeout(() => {
           handsfree.debug.$wrap.style.display = 'none'
-          handsfree.start()
         }, 0)
       }
 
@@ -243,6 +244,8 @@
         <p><img src="${rootURI}/assets/logo-title.png" width=300 height="auto"></p>
         <p style="font-size: 36px !important; color: #fff !important; text-shadow: none !important">Loading...</p>
       </div>`
+
+      handsfree.start()
 
       /**
        * Listen for new messages
