@@ -11,8 +11,9 @@
   /**
    * Displays an error if a dependency can't load
    */
-  const handleError = function () {
+  const handleError = function (err) {
     alert('😞 Pixelfelt Load Error\n\nPlease refresh the page and try again. If you get this message again then Pixelfelt might not work on this page.')
+    return err
   }
 
   /**
@@ -110,14 +111,12 @@
 
                 fetch(rootURI + '/' + script)
                   .then(response => response.text())
-                  .then(code => {
-                    manifestCode += code + '\n\n'
-                  })
-                  .catch(handleError)
-                  .finally(() => {
+                  .then(code => manifestCode += code + '\n\n')
+                  .then(() => {
                     --manifestScriptsLoading
                     maybeLoadCode()
                   })
+                  .catch(handleError)
               })
   
               // Inject CSS

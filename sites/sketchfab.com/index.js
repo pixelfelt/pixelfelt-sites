@@ -6,7 +6,10 @@
 /**
  * Click and drag sketchfabs
  */
-(function () {
+ (function () {
+  let isZooming = false
+  let lastPinchDist = 0
+  
   // Setup Handsfree.js
   handsfree.enablePlugins('browser')
   handsfree.update({
@@ -23,12 +26,56 @@
     held: 'mousemove',
     released: 'mouseup'
   }
+
+  /**
+   * Handles zooming in/out
+   */  
+  const sketchfabZoom = handsfree.throttle(({hands}) => {
+    if (!hands.pointer) return
+
+    // Zooming in/out
+    if (hands.pinchState[0][0] === 'held' && hands.pinchState[1][0] === 'held') {
+      let a = hands.curPinch[0][0].x - hands.curPinch[1][0].x 
+      let b = hands.curPinch[0][0].y - hands.curPinch[1][0].y 
+      let curDist = Math.sqrt(a*a + b*b)
+      let absDist = Math.abs(lastPinchDist - curDist)
+
+      if (!isZooming) {
+        isZooming = true
+      } else {
+        // Find the canvas inside the iframe
+        let $canvas = document.querySelector('canvas.canvas')
+        if (!$canvas) {
+          $canvas = document.querySelector('iframe.c-viewer__iframe')
+          if ($canvas) {
+            $canvas = $canvas.contentWindow.document.querySelector('canvas.canvas')
+          }
+        }
+        if (!$canvas) return
+
+        let direction = curDist < lastPinchDist ? -1 : 1
+        let event = document.createEvent('MouseEvents')
+        event.initEvent('wheel', true, true)
+        event.deltaY = 100 * direction
+        
+        $canvas.dispatchEvent(event)
+      }
+
+      lastPinchDist = curDist
+    } else {
+      isZooming = false
+    }
+  }, 500)
+
+  handsfree.use('sketchfabZoom', {
+    onFrame: sketchfabZoom
+  })
   
   // Pinch to turn 3D model
   handsfree.use('sketchfab', {
     onFrame: ({hands}) => {
       if (!hands.pointer) return
-  
+
       // Pan the sketch
       if (hands.pointer[1].isVisible && hands.pinchState[1][0]) {
         // Get the event and element to send events to
@@ -60,26 +107,26 @@
       }
   
       // Click on things
-      if (hands.pinchState[1][0] === 'start' && hands.pointer[1].x) {
-        const $el = document.elementFromPoint(hands.pointer[1].x, hands.pointer[1].y)
-        if ($el && $el.classList.contains('c-model-360-preview')) {
-          $el.dispatchEvent(
-            new MouseEvent('click', {
-              bubbles: true,
-              cancelable: true,
-              clientX: hands.pointer[1].x,
-              clientY: hands.pointer[1].y
-            })
-          )
-        }
-      }
+      // if (hands.pinchState[1][0] === 'start' && hands.pointer[1].x) {
+      //   const $el = document.elementFromPoint(hands.pointer[1].x, hands.pointer[1].y)
+      //   if ($el && $el.classList.contains('c-model-360-preview')) {
+      //     $el.dispatchEvent(
+      //       new MouseEvent('click', {
+      //         bubbles: true,
+      //         cancelable: true,
+      //         clientX: hands.pointer[1].x,
+      //         clientY: hands.pointer[1].y
+      //       })
+      //     )
+      //   }
+      // }
   
       // Escape key
-      if (hands.pinchState[0][3] === 'start') {
-        document.dispatchEvent(new KeyboardEvent('keydown', {
-          keyCode: 27
-        }))
-      }
+      // if (hands.pinchState[0][3] === 'start') {
+      //   document.dispatchEvent(new KeyboardEvent('keydown', {
+      //     keyCode: 27
+      //   }))
+      // }
     }
   })
   
@@ -89,7 +136,7 @@
   handsfree.plugin.pinchScroll.onFrame = function ({hands}) {
     // Wait for other plugins to update
     setTimeout(() => {
-      if (!hands.pointer) return
+      if (!hands.pointer || isZooming) return
       const height = this.handsfree.debug.$canvas.hands.height
       const width = this.handsfree.debug.$canvas.hands.width
   
@@ -126,3 +173,4 @@
     })
   }
 })()
+
