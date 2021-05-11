@@ -27,6 +27,23 @@
           action: 'editor.loadCode',
           code: manifestCode
         }, '*')
+      } else {
+        $.dashboard.iframe.contentWindow.postMessage({
+          action: 'editor.loadCode',
+          code: `(function () {
+            handsfree.use('custom', {
+              onFrame ({hands, weboji, pose, handpose, facemesh}) {
+                if (!hands && !weboji && !pose && !handpose && !facemesh) return
+                try {
+                  
+          
+                } catch (err) {
+                  console.error(err)
+                }
+              }
+            })
+          })()`
+        }, '*')
       }
 
       handsfree.start()
@@ -63,7 +80,7 @@
       $.handsfree.js.onerror = handleError
 
       // Setup dashboard dependencies
-      $.dashboard.iframe.src = 'https://unpkg.com/pixelfelt-blockly@latest/dist/index.html'
+      $.dashboard.iframe.src = 'https://unpkg.com/pixelfelt-blockly@2021.5.11-1/dist/index.html'
       $.dashboard.iframe.id = 'pixelfelt-dashboard'
       $.dashboard.iframe.classList.add('handsfree-show-when-started')
       $.dashboard.css.setAttribute('rel', 'stylesheet')
@@ -259,6 +276,11 @@
           // Run code
           case 'pixelfelt.editor.runCode':
             eval(event.data.code)
+          break
+
+          // Autosave code
+          case 'pixelfelt.editor.autosave':
+            localStorage.setItem('pixelfeltCode', event.data.code)
           break
 
           // Picture in Picture
