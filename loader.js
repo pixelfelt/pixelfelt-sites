@@ -1,5 +1,5 @@
 /**
- * Reads manifest.json and determines the file to use
+ * Reads package.json and determines the file to use
  */
 (function () {
   // All other assets are relative to this URL
@@ -34,11 +34,11 @@
   }
   
   /**
-   * Load the manifest and dependencies
+   * Load the package and dependencies
    */
-  fetch(rootURI + '/manifest.json')
+  fetch(rootURI + '/package.json')
     .then(response => response.json())
-    .then(manifest => {
+    .then(package => {
       $ = {
         handsfree: {
           js: document.createElement('script'),
@@ -94,8 +94,8 @@
     
         // Loop through each site and look for matches
         // @todo Break once a match is found
-        Object.keys(manifest.sites).forEach(n => {
-          const site = manifest.sites[n]
+        Object.keys(package.sitemanifest.sites).forEach(n => {
+          const site = package.sitemanifest.sites[n]
           
           if (typeof site.matches === 'string') site.matches = [site.matches]
           if (typeof site.js === 'string') site.js = [site.js]
@@ -243,6 +243,7 @@
       $.loader.wrapper.innerHTML = `<div style="text-align: center !important">
         <p><img src="${rootURI}/assets/logo-title.png" width=300 height="auto"></p>
         <p style="font-size: 36px !important; color: #fff !important; text-shadow: none !important">Loading...</p>
+        <p style="font-size: 18px !important; color: #2ca300 !important;">${package.version}</p>
       </div>`
 
       /**

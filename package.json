@@ -1,6 +1,6 @@
 {
   "name": "pixelfelt-sites",
-  "version": "2021.5.8-2",
+  "version": "2021.5.11-1",
   "description": "A collection of Handsfree.js plugins for specific sites and pages",
   "main": "loader.js",
   "repository": {
@@ -17,5 +17,35 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+
+  "sitemanifest": {
+    "manifest_version": 1,
+    "sites": [
+      {
+        "matches": ["https://gacembed.withgoogle.com/blob-opera*", "https://artsandculture.google.com/experiment/AAHWrq360NcGbw*"],
+        "js": "sites/withgoogle.com/blob-opera.js"
+      },
+      {
+        "matches": "https://sketchfab.com*",
+        "js": "sites/sketchfab.com/index.js"
+      },
+      {
+        "matches": "https://sm64.gitlab.io*",
+        "js": "sites/sm64.gitlab.io/index.js"
+      },
+      {
+        "matches": ["https://teropa.info/musicmouse*"],
+        "js": ["/sites/teropa.info/musicmouse/index.js"]
+      },
+      {
+        "matches": ["https://docs.google.com/presentation/d*"],
+        "js": ["/sites/slides.google.com/index.js"]
+      },
+      {
+        "matches": ["https://www.youtube.com*"],
+        "js": ["/sites/youtube.com/index.js"]
+      }
+    ]
+  }
 }
