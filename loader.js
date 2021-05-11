@@ -80,7 +80,7 @@
       $.handsfree.js.onerror = handleError
 
       // Setup dashboard dependencies
-      $.dashboard.iframe.src = 'https://unpkg.com/pixelfelt-blockly@2021.5.11-1/dist/index.html'
+      $.dashboard.iframe.src = 'https://unpkg.com/pixelfelt-blockly@2021.5.11-2/dist/index.html'
       $.dashboard.iframe.id = 'pixelfelt-dashboard'
       $.dashboard.iframe.classList.add('handsfree-show-when-started')
       $.dashboard.css.setAttribute('rel', 'stylesheet')
