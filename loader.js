@@ -22,31 +22,35 @@
   const maybeLoadCode = function () {
     if (!manifestScriptsLoading) {
       if (manifestCode) {
-        eval(manifestCode)
-        $.dashboard.iframe.contentWindow.postMessage({
-          action: 'editor.loadCode',
-          code: manifestCode
-        }, '*')
+        setTimeout(() => {
+          eval(manifestCode)
+          $.dashboard.iframe.contentWindow.postMessage({
+            action: 'editor.loadCode',
+            code: manifestCode
+          }, '*')
+          handsfree.start()
+        }, 0)
       } else {
-        $.dashboard.iframe.contentWindow.postMessage({
-          action: 'editor.loadCode',
-          code: `(function () {
-            handsfree.use('custom', {
-              onFrame ({hands, weboji, pose, handpose, facemesh}) {
-                if (!hands && !weboji && !pose && !handpose && !facemesh) return
-                try {
-                  
-          
-                } catch (err) {
-                  console.error(err)
-                }
-              }
-            })
-          })()`
-        }, '*')
-      }
+        setTimeout(() => {
+          $.dashboard.iframe.contentWindow.postMessage({
+            action: 'editor.loadCode',
+            code: `(function () {
+  handsfree.use('custom', {
+    onFrame ({hands, weboji, pose, handpose, facemesh}) {
+      if (!hands && !weboji && !pose && !handpose && !facemesh) return
+      try {
+        
 
-      handsfree.start()
+      } catch (err) {
+        console.error(err)
+      }
+    }
+  })
+})()`
+          }, '*')
+          handsfree.start()
+        }, 0)
+      }
     }
   }
   
@@ -80,7 +84,7 @@
       $.handsfree.js.onerror = handleError
 
       // Setup dashboard dependencies
-      $.dashboard.iframe.src = 'https://unpkg.com/pixelfelt-blockly@2021.5.11-2/dist/index.html'
+      $.dashboard.iframe.src = 'https://unpkg.com/pixelfelt-blockly@2021.5.11-9/dist/index.html'
       $.dashboard.iframe.id = 'pixelfelt-dashboard'
       $.dashboard.iframe.classList.add('handsfree-show-when-started')
       $.dashboard.css.setAttribute('rel', 'stylesheet')
@@ -100,7 +104,6 @@
           hands: true
         });
         handsfree.enablePlugins('browser')
-        handsfree.start()
 
         // Position fix the debugger
         handsfree.debug.$wrap.style.position = 'fixed'
@@ -111,6 +114,7 @@
     
         // Loop through each site and look for matches
         // @todo Break once a match is found
+        let matchesFound = 0
         Object.keys(package.sitemanifest.sites).forEach(n => {
           const site = package.sitemanifest.sites[n]
           
@@ -125,6 +129,7 @@
               // Inject JS
               site.js && site.js.forEach(script => {
                 ++manifestScriptsLoading
+                ++matchesFound
 
                 fetch(rootURI + '/' + script)
                   .then(response => response.text())
@@ -147,6 +152,11 @@
             }
           })
         })
+
+        // No matches found so load default
+        if (!matchesFound) {
+          maybeLoadCode()
+        }
 
         /**
          * Picture in Picture
@@ -260,7 +270,7 @@
       $.loader.wrapper.innerHTML = `<div style="text-align: center !important">
         <p><img src="${rootURI}/assets/logo-title.png" width=300 height="auto"></p>
         <p style="font-size: 36px !important; color: #fff !important; text-shadow: none !important">Loading...</p>
-        <p style="font-size: 18px !important; color: #2ca300 !important;">${package.version}</p>
+        <p style="font-size: 18px !important; color: #FF9D00 !important;">${package.version}</p>
       </div>`
 
       /**
