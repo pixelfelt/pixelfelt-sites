@@ -7,27 +7,17 @@
     document.body.appendChild($p5Script) 
   } 
 
+  let prevPointer = [
+    [{x: 0, y: 0}, {x: 0, y: 0}, {x: 0, y: 0}, {x: 0, y: 0}],
+    [{x: 0, y: 0}, {x: 0, y: 0}, {x: 0, y: 0}, {x: 0, y: 0}]
+  ]
+  
   // Setup Handsfree.js
   handsfree.update({
     hands: true
   })
   handsfree.enablePlugins('browser') 
   document.body.setAttribute('style', 'overflow: visible')
-  document.querySelectorAll('.handsfree-pointer').forEach($pointer => {
-    $pointer.style.visibility = 'hidden'
-  })
-
-  handsfree.use('custom', {
-    onFrame ({hands, weboji, pose, handpose, facemesh}) {
-      if (!hands && !weboji && !pose && !handpose && !facemesh) return
-      try { 
-        
-
-      } catch (err) {
-        console.error(err)
-      }
-    }
-  })
 
 
   /** 
@@ -66,11 +56,7 @@
    * Main draw loop
    */
   window.draw = function () {
-    background('rgba(0,0,0,0)')
-    clear()
     fingerPaint()
-    // drawHands()
-    drawPointer()
   }
 
 
@@ -99,6 +85,9 @@
   window.fingerPaint = function () {
     // Check for pinches and create dots if something is pinched
     const hands = handsfree.data?.hands
+    let bounds = sketch.elt.getBoundingClientRect()
+
+    // Paint with fingers
     if (hands?.pinchState) {
       // Loop through each hand
       hands.pinchState.forEach((hand, handIndex) => {
@@ -106,90 +95,41 @@
         
         // Loop through each finger
         hand.forEach((state, finger) => {
-          // Other states are "start" and "released"
-          if (state === 'held') {
-            // Left [0] index finger [0] is the eraser, so let's make it paint larger
-            const circleSize = handIndex === 0 && finger === 0 ? 40 : 10
+          if (hands.pointer[handIndex].y >= bounds.y && hands.pointer[handIndex].y <= bounds.y + bounds.height) {
+            let x = hands.pointer[handIndex].x - bounds.x
+            let y = hands.pointer[handIndex].y - bounds.y
             
-            // Store the paint
-            paint.push([hands.curPinch[handIndex][finger].x, hands.curPinch[handIndex][finger].y, handIndex, finger, circleSize])
+            fill(colorMap[handIndex][finger])
+            stroke(colorMap[handIndex][finger])
+            strokeWeight(10)
+    
+            // Draw a circle on the spot that we started
+            if (state === 'start') {
+              prevPointer[handIndex][finger] = {x, y}
+
+            // Draw line from circle
+            } else if (state === 'held') {
+              line(prevPointer[handIndex][finger].x, prevPointer[handIndex][finger].y, x, y)
+            }
+
+            // Set the last position
+            prevPointer[handIndex][finger] = {
+              x: hands.pointer[handIndex].x - bounds.x,
+              y: hands.pointer[handIndex].y - bounds.y
+            }
           }
         })
       })  
     } 
       
-    // Draw the paint
-    paint.forEach((dot, i) => {
-      // Draw dot
-      fill(colorMap[dot[2]][dot[3]])
-      circle(sketch.width - dot[0] * sketch.width, dot[1] * sketch.height, dot[4])
-
-      stroke(colorMap[dot[2]][dot[3]])
-      strokeWeight(dot[4])
-
-      // Draw line
-      if (i > 1) {
-        line(sketch.width - paint[i-1][0] * sketch.width, paint[i-1][1] * sketch.height, sketch.width - paint[i][0] * sketch.width, paint[i][1] * sketch.height)
-      }
-    })
-    
     // Clear everything if the left [0] pinky [3] is pinched
     if (hands?.pinchState && hands.pinchState[0][3] === 'released') {
-      paint = []
+      clear()
     }
   }
-
  
 
 
-
-
-  /**
-   * #3 Draw the hands into the P5 canvas
-   * @see https://handsfree.js.org/ref/model/hands.html#data
-   */
-  window.drawHands = function () {
-    const hands = handsfree.data?.hands
-    
-    // Bail if we don't have anything to draw
-    if (!hands?.landmarks) return
-    
-    // Draw keypoints
-    hands.landmarks.forEach((hand, handIndex) => {
-      hand.forEach((landmark, landmarkIndex) => {
-        // Set color
-        // @see https://handsfree.js.org/ref/model/hands.html#data
-        if (colorMap[handIndex]) {
-          switch (landmarkIndex) {
-            case 8: fill(colorMap[handIndex][0]); break
-            case 12: fill(colorMap[handIndex][1]); break
-            case 16: fill(colorMap[handIndex][2]); break
-            case 20: fill(colorMap[handIndex][3]); break
-            default:
-              fill(color(255, 255, 255))
-          }                
-        }
-        
-        // Set stroke
-        if (handIndex === 0 && landmarkIndex === 8) {
-          stroke(color(255, 255, 255))
-          strokeWeight(5)
-          circleSize = 40
-        } else {
-          stroke(color(0, 0, 0))
-          strokeWeight(0)
-          circleSize = 10
-        }
-        
-        circle(
-          // Flip horizontally
-          sketch.width - landmark.x * sketch.width,
-          landmark.y * sketch.height,
-          circleSize
-        )
-      })
-    })
-  }
 
   /**
    * Update pinch scroll so that it only works with left hand
